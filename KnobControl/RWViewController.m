@@ -26,7 +26,7 @@
     _knobControl.lineWidth = 4.0;
     _knobControl.pointerLength = 8.0;
   
-//    _knobControl.minimumValue = 0.0;  //must be normalized (0-1) range for now.
+//    _knobControl.minimumValue = -1.0;  //must be normalized (0-1) range for now.
 //    _knobControl.maximumValue = 1.0;
     _knobControl.shape = 0.5;
     

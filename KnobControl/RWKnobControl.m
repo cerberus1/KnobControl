@@ -10,6 +10,10 @@
 #import "RWKnobRenderer.h"
 #import "RWKnobControl.h"
 
+#define IPMIN(x,y) ((x)<(y)?(x):(y))
+#define IPMAX(x,y) ((x)<(y)?(y):(x))
+#define BOUNDED(x,lo,hi) ((x) < (lo) ? (lo) : (x) > (hi) ? (hi) : (x))
+
 
 @implementation RWKnobControl {
     RWKnobRenderer *_knobRenderer;
@@ -59,6 +63,8 @@ double FromNormalizedParam(double normalizedValue, double min, double max, doubl
 }
 
 #pragma mark - API Methods
+
+
 - (void)setValue:(CGFloat)value animated:(BOOL)animated
 {
     if(value != _value) {
@@ -68,7 +74,18 @@ double FromNormalizedParam(double normalizedValue, double min, double max, doubl
         _value = MIN(self.maximumValue, MAX(self.minimumValue, value));  // add shape here?
         
         
-        double a = FromNormalizedParam(value, self.minimumValue , self.maximumValue , self.shape);  //testing
+        double a = 0.0;
+        
+        if(self.maximumValue != 1.0 || self.minimumValue != 0.0) {
+            
+            a =  BOUNDED(value, self.minimumValue , self.maximumValue);
+            
+            a = ToNormalizedParam(a, self.minimumValue , self.maximumValue , self.shape);
+            
+        }
+        a = FromNormalizedParam(value, self.minimumValue , self.maximumValue , self.shape);  //testing
+        a = IPMIN(a, self.maximumValue);  // needed ?
+        value = a;
         
         // Now let's update the knob with the correct angle
         CGFloat angleRange = self.endAngle - self.startAngle;
@@ -142,7 +159,7 @@ double FromNormalizedParam(double normalizedValue, double min, double max, doubl
     _knobRenderer.color = self.tintColor;
     // Set some defaults
     _knobRenderer.startAngle = -M_PI * 10.1 / 8.0; // -M_PI * 11 / 8.0;
-    _knobRenderer.endAngle = M_PI * 2.1 / 8.0; // M_PI * 4 / 8.0;
+    _knobRenderer.endAngle = M_PI * 2.1 / 8.0; // M_PI * 3 / 8.0;
     _knobRenderer.pointerAngle = _knobRenderer.startAngle;
     _knobRenderer.lineWidth = 2.0;
     _knobRenderer.pointerLength = 6.0;

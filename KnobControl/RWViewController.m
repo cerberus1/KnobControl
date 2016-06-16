@@ -26,8 +26,8 @@
     _knobControl.lineWidth = 4.0;
     _knobControl.pointerLength = 8.0;
   
-//    _knobControl.minimumValue = -1.0;  //must be normalized (0-1) range for now.
-//    _knobControl.maximumValue = 1.0;
+//    _knobControl.minimumValue = _valueSlider.minimumValue = -1.0;  //must be normalized (0-1) range for now.
+//    _knobControl.maximumValue = _valueSlider.maximumValue = 1.0;
     _knobControl.shape = 0.5;
     
     _knobControl.value = 0.5;
@@ -37,7 +37,7 @@
     
     [ _knobControl setValue:(_knobControl.value) animated:self.animateSwitch.on];
     [self.valueSlider setValue:_knobControl.value animated:self.animateSwitch.on];
-    self.valueLabel.text = [NSString stringWithFormat:@"%0.2f", _knobControl.value];
+    [self updateValueLabel];
     //[RWKnobControl  set:(0.0)];
     
     self.view.tintColor = [UIColor colorWithRed:(1.0) green:(0.5) blue:0.0 alpha:(1.0)];
@@ -48,6 +48,14 @@
     [_knobControl addTarget:self
                      action:@selector(handleValueChanged:)
            forControlEvents:UIControlEventValueChanged];
+}
+
+- (void)updateValueLabel
+
+{
+    
+    self.valueLabel.text = [NSString stringWithFormat:@"%0.2f", _knobControl.value];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -79,7 +87,8 @@
                        context:(void *)context
 {
     if(object == _knobControl && [keyPath isEqualToString:@"value"]) {
-        self.valueLabel.text = [NSString stringWithFormat:@"%0.2f", _knobControl.value];
+       
+        [self updateValueLabel];
     }
 }
 

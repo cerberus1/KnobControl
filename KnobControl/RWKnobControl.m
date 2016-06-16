@@ -74,7 +74,7 @@ double FromNormalizedParam(double normalizedValue, double min, double max, doubl
         _value = MIN(self.maximumValue, MAX(self.minimumValue, value));  // add shape here?
         
         
-        double a = 0.0;
+        double a = /*0.0;
         
         if(self.maximumValue != 1.0 || self.minimumValue != 0.0) {
             
@@ -83,9 +83,8 @@ double FromNormalizedParam(double normalizedValue, double min, double max, doubl
             a = ToNormalizedParam(a, self.minimumValue , self.maximumValue , self.shape);
             
         }
-        a = FromNormalizedParam(value, self.minimumValue , self.maximumValue , self.shape);  //testing
-        a = IPMIN(a, self.maximumValue);  // needed ?
-        value = a;
+        a = */FromNormalizedParam(value, self.minimumValue , self.maximumValue , self.shape);  //testing
+       // a = IPMIN(a, self.maximumValue);  // needed ?
         
         // Now let's update the knob with the correct angle
         CGFloat angleRange = self.endAngle - self.startAngle;

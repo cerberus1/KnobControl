@@ -14,7 +14,6 @@
 //#define IPMAX(x,y) ((x)<(y)?(y):(x))
 #define BOUNDED(x,lo,hi) ((x) < (lo) ? (lo) : (x) > (hi) ? (hi) : (x))
 
-
 @implementation RWKnobControl {
     RWKnobRenderer *_knobRenderer;
     RWRotationGestureRecognizer *_gestureRecognizer;
@@ -40,7 +39,7 @@
         // Initialization code
         _minimumValue = 0.0;
         _maximumValue = 1.0;
-        _value = 1.0;
+        _value = 0.0;
         _continuous = YES;
         _shape = 1.0;
         _gestureRecognizer = [[RWRotationGestureRecognizer alloc] initWithTarget:self
@@ -73,12 +72,10 @@ inline double ToNormalizedParam(double nonNormalizedValue, double min, double ma
         // Make sure we limit it to the requested bounds
        _value = MIN(self.maximumValue, MAX(self.minimumValue, value));  // add shape here?
         
-        
-       // _value = /*0.0;*/
         double a = _value;
         
         if(self.maximumValue != 1.0 || self.minimumValue != 0.0) {  // if is not normalized
-//
+
         a =  BOUNDED(a, self.minimumValue , self.maximumValue); //needed?
         
         a =       ToNormalizedParam(a, self.minimumValue , self.maximumValue , self.shape);
@@ -94,10 +91,7 @@ inline double ToNormalizedParam(double nonNormalizedValue, double min, double ma
         CGFloat angleRange = self.endAngle - self.startAngle;
         CGFloat valueRange = self.maximumValue - self.minimumValue;
         
-        CGFloat angleForValue = (a  - self.minimumValue) / valueRange * angleRange + self.startAngle; ///orig
-
-//        CGFloat angleForValue = pow((a  - self.minimumValue) / valueRange * angleRange + self.startAngle, 1.0/self.shape);  ///added
-
+        CGFloat angleForValue = (a  - self.minimumValue) / valueRange * angleRange + self.startAngle;
 
         [_knobRenderer setPointerAngle:angleForValue animated:animated];
         [self didChangeValueForKey:@"value"];

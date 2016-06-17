@@ -18,11 +18,6 @@
 @end
 
 
-double ToNormalizedParam(double nonNormalizedValue, double min, double max, double shape)
-{
-    return pow((nonNormalizedValue - min) / (max - min), 1.0 / shape);
-}
-
 @implementation RWViewController
 
 double m_knobControlMin = 0.0;
@@ -46,14 +41,6 @@ bool m_isNormalized = true;
     _knobControl.value = 0.5;  // set initial value
     
     // [ _knobControl setValue:<#(CGFloat)#> animated:<#(BOOL)#>
-  //  double tempvalue = _knobControl.value;
-    
-//    if(m_knobControlMax != 1.0 || m_knobControlMin != 0.0){ // if non-normalized, convert tempvalue to normalized.
-//        
-//        m_isNormalized = false;
-//        tempvalue  = BOUNDED(_knobControl.value, m_knobControlMin, m_knobControlMax);
-//        tempvalue = ToNormalizedParam(tempvalue, m_knobControlMin, m_knobControlMax, _knobControl.shape);
-//    }
     
     [ _knobControl setValue:(_knobControl.value) animated:self.animateSwitch.on];
     [self.valueSlider setValue:_knobControl.value animated:self.animateSwitch.on];
@@ -85,16 +72,6 @@ bool m_isNormalized = true;
 }
 
 - (IBAction)handleValueChanged:(id)sender {
-    
-//    double tempvalue = _knobControl.value;
-//    
-//    if(m_knobControlMax != 1.0 || m_knobControlMin != 0.0){ // if non-normalized, convert tempvalue to normalized.
-//        
-//        m_isNormalized = false;
-//        tempvalue  = BOUNDED(_knobControl.value, m_knobControlMin, m_knobControlMax);
-//        tempvalue = ToNormalizedParam(tempvalue, m_knobControlMin, m_knobControlMax, _knobControl.shape);
-//    }
-    
     
     if(sender == self.valueSlider) {
         _knobControl.value = self.valueSlider.value;

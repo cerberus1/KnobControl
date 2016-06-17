@@ -10,8 +10,8 @@
 #import "RWKnobRenderer.h"
 #import "RWKnobControl.h"
 
-#define IPMIN(x,y) ((x)<(y)?(x):(y))
-#define IPMAX(x,y) ((x)<(y)?(y):(x))
+//#define IPMIN(x,y) ((x)<(y)?(x):(y))
+//#define IPMAX(x,y) ((x)<(y)?(y):(x))
 #define BOUNDED(x,lo,hi) ((x) < (lo) ? (lo) : (x) > (hi) ? (hi) : (x))
 
 
@@ -40,7 +40,7 @@
         // Initialization code
         _minimumValue = 0.0;
         _maximumValue = 1.0;
-        _value = 0.0;
+        _value = 1.0;
         _continuous = YES;
         _shape = 1.0;
         _gestureRecognizer = [[RWRotationGestureRecognizer alloc] initWithTarget:self
@@ -52,14 +52,14 @@
     return self;
 }
 
-double ToNormalizedParam(double nonNormalizedValue, double min, double max, double shape)
-{
-    return pow((nonNormalizedValue - min) / (max - min), 1.0 / shape);
-}
-
 double FromNormalizedParam(double normalizedValue, double min, double max, double shape)
 {
     return min + pow((double) normalizedValue, shape) * (max - min);
+}
+
+inline double ToNormalizedParam(double nonNormalizedValue, double min, double max, double shape)
+{
+    return pow((nonNormalizedValue - min) / (max - min), 1.0 / shape);
 }
 
 #pragma mark - API Methods
@@ -71,26 +71,32 @@ double FromNormalizedParam(double normalizedValue, double min, double max, doubl
         [self willChangeValueForKey:@"value"];
         // Save the value to the backing ivar
         // Make sure we limit it to the requested bounds
-        _value = MIN(self.maximumValue, MAX(self.minimumValue, value));  // add shape here?
+       _value = MIN(self.maximumValue, MAX(self.minimumValue, value));  // add shape here?
         
         
-        double a = /*0.0;
+       // _value = /*0.0;*/
+        double a = _value;
         
-        if(self.maximumValue != 1.0 || self.minimumValue != 0.0) {
-            
-            a =  BOUNDED(value, self.minimumValue , self.maximumValue);
-            
-            a = ToNormalizedParam(a, self.minimumValue , self.maximumValue , self.shape);
-            
-        }
-        a = */FromNormalizedParam(value, self.minimumValue , self.maximumValue , self.shape);  //testing
+        if(self.maximumValue != 1.0 || self.minimumValue != 0.0) {  // if is not normalized
+//
+        a =  BOUNDED(a, self.minimumValue , self.maximumValue); //needed?
+        
+        a =       ToNormalizedParam(a, self.minimumValue , self.maximumValue , self.shape);
+        
+        } /*else*/
+//        {
+        a = FromNormalizedParam(a, self.minimumValue , self.maximumValue , self.shape);  //testing
        // a = IPMIN(a, self.maximumValue);  // needed ?
+        
+//        }
         
         // Now let's update the knob with the correct angle
         CGFloat angleRange = self.endAngle - self.startAngle;
         CGFloat valueRange = self.maximumValue - self.minimumValue;
-       // CGFloat angleForValue = (_value - self.minimumValue) / valueRange * angleRange + self.startAngle;
-        CGFloat angleForValue = (a - self.minimumValue) / valueRange * angleRange + self.startAngle;
+        
+        CGFloat angleForValue = (a  - self.minimumValue) / valueRange * angleRange + self.startAngle; ///orig
+
+//        CGFloat angleForValue = pow((a  - self.minimumValue) / valueRange * angleRange + self.startAngle, 1.0/self.shape);  ///added
 
 
         [_knobRenderer setPointerAngle:angleForValue animated:animated];
@@ -195,8 +201,11 @@ double FromNormalizedParam(double normalizedValue, double min, double max, doubl
     // 4. Convert the angle to a value
     CGFloat angleRange = self.endAngle - self.startAngle;
     CGFloat valueRange = self.maximumValue - self.minimumValue;
-    CGFloat valueForAngle = (boundedAngle - self.startAngle) / angleRange
+    CGFloat valueForAngle = (boundedAngle - self.startAngle) / angleRange  //orig
     * valueRange + self.minimumValue;
+    
+//    CGFloat valueForAngle = pow((boundedAngle - self.startAngle) / angleRange
+//    * valueRange + self.minimumValue, 1.0/_shape);  //added
     
     // 5. Set the control to this value
     self.value = valueForAngle;

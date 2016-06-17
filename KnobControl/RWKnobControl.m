@@ -56,7 +56,7 @@ double FromNormalizedParam(double normalizedValue, double min, double max, doubl
     return min + pow((double) normalizedValue, shape) * (max - min);
 }
 
-inline double ToNormalizedParam(double nonNormalizedValue, double min, double max, double shape)
+double ToNormalizedParam(double nonNormalizedValue, double min, double max, double shape)
 {
     return pow((nonNormalizedValue - min) / (max - min), 1.0 / shape);
 }
